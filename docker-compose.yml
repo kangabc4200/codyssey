@@ -1,10 +1,25 @@
-version: '3.8' # 도커 컴포즈 버전
-
 services:
-  my-web-server:      # 서비스 이름
-    image: nginx      # 사용할 이미지
+  web1:
+    build: .
+    container_name: codyssy-web-1
     ports:
-      - "8080:80"     # 포트 설정 (내컴퓨터:컨테이너)
+      - "8081:80"
+    command: /bin/sh -c "echo '<h1>WEB 1 server</h1>' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+
+  web2:
+    build: .
+    container_name: codyssy-web-2
+    ports:
+      - "8082:80"
+    command: /bin/sh -c "echo '<h1>WEB 2 server</h1>' > /usr/share/nginx/html/index.html && nginx -g 'daemon off;'"
+
+  lb:
+    image: nginx:latest
+    container_name: codyssy-lb
+    ports:
+      - "8080:80"
     volumes:
-      - ./app:/usr/share/nginx/html # 폴더 연결 (현재폴더의 app : 서버폴더)
-      
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web1
+      - web2
