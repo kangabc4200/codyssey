@@ -1,0 +1,10 @@
+version: '3.8' # 도커 컴포즈 버전
+
+services:
+  my-web-server:      # 서비스 이름
+    image: nginx      # 사용할 이미지
+    ports:
+      - "8080:80"     # 포트 설정 (내컴퓨터:컨테이너)
+    volumes:
+      - ./app:/usr/share/nginx/html # 폴더 연결 (현재폴더의 app : 서버폴더)
+      
