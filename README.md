@@ -91,8 +91,6 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS 
 9a8935ce7022   hello-world     "/hello"                 2 days ago       Exited (0) 2 days ago                                focused_wing
 ```
 
-cat >> README.md <<'EOF'
-
 ## Dockerfile 웹 서버 실행 결과
 
 - 이미지 이름: codyssey-nginx
