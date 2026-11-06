@@ -111,3 +111,33 @@ git add README.md
 git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
 git push
 ```
+## Docker 볼륨 실습
+
+Docker 볼륨을 생성하고, 컨테이너 삭제 후에도 데이터가 유지되는지 확인했다.
+
+```bash
+docker volume create codyssey-volume
+docker volume ls
+```
+
+```text
+DRIVER    VOLUME NAME
+local     codyssey-volume
+```
+
+```bash
+docker run -it --name volume-test -v codyssey-volume:/data ubuntu bash
+echo "Docker volume test" > /data/test.txt
+cat /data/test.txt
+exit
+docker rm volume-test
+docker run -it --name volume-test-2 -v codyssey-volume:/data ubuntu bash
+cat /data/test.txt
+```
+
+```text
+Docker volume test
+```
+
+컨테이너를 삭제해도 Docker 볼륨에 저장된 데이터가 유지됨을 확인했다.
+
