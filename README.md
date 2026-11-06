@@ -90,3 +90,26 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS 
 64d40bfce932   codyssey-web2   "/docker-entrypoint..."  2 days ago       Exited (255) 30 minutes ago   0.0.0.0:8082->80/tcp   codyssey-web-2
 9a8935ce7022   hello-world     "/hello"                 2 days ago       Exited (0) 2 days ago                                focused_wing
 ```
+
+cat >> README.md <<'EOF'
+
+## Dockerfile 웹 서버 실행 결과
+
+- 이미지 이름: codyssey-nginx
+- 컨테이너 이름: codyssey-web
+- 포트 연결: localhost:8080 -> container:80
+- 실행 확인 명령어:
+
+```bash
+docker build -t codyssey-nginx .
+docker run -d --name codyssey-web -p 8080:80 codyssey-nginx
+docker ps
+curl http://localhost:8080
+
+그다음 Git에 저장합니다.
+
+```bash
+git add README.md
+git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
+git push
+```
