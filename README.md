@@ -198,3 +198,8 @@ git status
 ```text
 nothing to commit, working tree clean
 ```
+## Docker build 및 curl 접속 확인
+
+Docker 이미지를 빌드하고 `curl http://localhost:8080`로 웹 서버 응답을 확인했다.
+
+![Docker build 및 curl 접속 확인](./images/docker-build-curl.png)
