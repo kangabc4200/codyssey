@@ -91,7 +91,7 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS 
 9a8935ce7022   hello-world     "/hello"                 2 days ago       Exited (0) 2 days ago                                focused_wing
 ```
 
-## Dockerfile 웹 서버 실행 결과
+## 5. Dockerfile 웹 서버 실행 결과
 
 - 이미지 이름: codyssey-nginx
 - 컨테이너 이름: codyssey-web
@@ -103,6 +103,7 @@ docker build -t codyssey-nginx .
 docker run -d --name codyssey-web -p 8080:80 codyssey-nginx
 docker ps
 curl http://localhost:8080
+```
 
 그다음 Git에 저장합니다.
 
@@ -111,7 +112,7 @@ git add README.md
 git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
 git push
 ```
-## Docker 볼륨 실습
+## 6. Docker 볼륨 실습
 
 Docker 볼륨을 생성하고, 컨테이너 삭제 후에도 데이터가 유지되는지 확인했다.
 
@@ -141,3 +142,59 @@ Docker volume test
 
 컨테이너를 삭제해도 Docker 볼륨에 저장된 데이터가 유지됨을 확인했다.
 
+## 7. Git 제출 기록
+
+```bash
+git add README.md
+git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
+git push
+```
+
+최종 상태 확인:
+
+```bash
+git status
+```
+
+```text
+nothing to commit, working tree clean
+```
+## 8. Dockerfile 내용
+
+```Dockerfile
+FROM nginx:latest
+COPY index.html /usr/share/nginx/html/index.html
+```
+
+## 9. Docker build 실행 결과
+
+```bash
+docker build -t codyssey-nginx .
+```
+
+```text
+빌드가 정상적으로 완료되었고, codyssey-nginx 이미지가 생성되었다.
+```
+
+## 10. Docker run 및 접속 확인 결과
+
+```bash
+docker run -d --name codyssey-web -p 8080:80 codyssey-nginx
+docker ps
+curl http://localhost:8080
+```
+
+```text
+codyssey-web 컨테이너가 실행되었고,
+localhost:8080 접속 시 index.html 내용이 출력되는 것을 확인했다.
+```
+
+## 11. Git 최종 제출 상태
+
+```bash
+git status
+```
+
+```text
+nothing to commit, working tree clean
+```
