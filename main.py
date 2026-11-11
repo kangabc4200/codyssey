@@ -1,50 +1,79 @@
+import json
 import random
-class Quiz:
-    def __init__(self, question, options, answer):
-        self.question = question
+import os
+
+class Question:
+    def __init__(self, prompt, options, answer):
+        self.prompt = prompt
         self.options = options
         self.answer = answer
 
-    def display(self):
-        print(f"\n[문제] {self.question}")
-        for i, option in enumerate(self.options, 1):
-            print(f"{i}. {option}")
+    # JSON 저장을 위해 객체를 딕셔너리로 변환하는 함수
+    def to_dict(self):
+        return {
+            "prompt": self.prompt,
+            "options": self.options,
+            "answer": self.answer
+        }
 
-    def check_answer(self, user_input):
-        return user_input == self.answer
-    
-# --- 테스트 코드 ---
-if __name__ == "__main__":
-    questions = [
-        Quiz("파이썬에서 리스트의 길이를 구하는 함수는?", ["size()", "len()", "count()", "length()"], 2),
-        Quiz("출력할 때 사용하는 함수는?", ["print()", "input()", "out()", "show()"], 1),
-        Quiz("정수를 만드는 함수는?", ["str()", "float()", "int()", "list()"], 3),
-        Quiz("파이썬 파일의 확장자는 무엇인가요?", [".txt", ".py", ".js", ".java"], 2),
-        Quiz("주석(설명)을 달 때 사용하는 기호는?", ["//", "/* */", "#", "--"], 3),
-        Quiz("리스트에 요소를 추가하는 함수는?", ["add()", "push()", "append()", "insert_end()"], 3),
-        Quiz("파이썬에서 '참'을 나타내는 값은?", ["True", "true", "YES", "1"], 1),
-        Quiz("문자열을 숫자로 바꾸는 함수는?", ["str()", "int()", "float()", "bool()"], 2)
-        ]
+class QuizGame:
+    def __init__(self):
+        self.questions = []
+        self.filename = "state.json"
+        self.load_data()  # 시작하자마자 데이터 불러오기
 
-    # [2. 위치] 리스트를 만든 직후, for문이 시작되기 전에 섞어줍니다!
-    random.shuffle(questions) 
-
-    print("🚀 퀴즈 게임을 시작합니다! (순서 랜덤)\n")
-    
-    score = 0
-selected_questions = questions[:3]  # 1. 먼저 3개만 골라냅니다.
-
-for q in selected_questions:        # 2. 고른 3개에 대해서만 반복합니다.
-    q.display()
-    try:
-        user_ans = int(input("정답 번호를 입력하세요: "))
-        if q.check_answer(user_ans):
-            print("✅ 정답입니다!\n")
-            score += 1
+    def load_data(self):
+        """파일에서 퀴즈 데이터를 불러옵니다."""
+        if os.path.exists(self.filename):
+            try:
+                with open(self.filename, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    # 딕셔너리 리스트를 Question 객체 리스트로 변환
+                    self.questions = [Question(q['prompt'], q['options'], q['answer']) for q in data]
+            except Exception as e:
+                print(f"데이터 로드 중 오류 발생: {e}")
+                self.questions = []
         else:
-            print("❌ 틀렸습니다.\n")
-    except ValueError:
-        print("⚠️ 숫자만 입력해주세요!\n")
+            # 파일이 없으면 기본 문제 세팅 (처음에만 실행됨)
+            self.questions = [
+                Question("파이썬의 탄생 연도는?", ["1989", "1991", "1995", "2000"], 2),
+                Question("리스트에 요소를 추가하는 함수는?", ["add()", "push()", "append()", "insert()"], 3)
+            ]
+            self.save_data()
 
-# 3. 마지막 결과 출력 (들여쓰기 밖으로!)
-print(f"🏁 게임 종료! 최종 점수: {score} / {len(selected_questions)}")
+    def save_data(self):
+        """현재 퀴즈 목록을 파일에 저장합니다."""
+        with open(self.filename, "w", encoding="utf-8") as f:
+            # 객체들을 딕셔너리 형태로 변환하여 저장
+            json_data = [q.to_dict() for q in self.questions]
+            json.dump(json_data, f, ensure_ascii=False, indent=4)
+
+    def run(self):
+        """메뉴를 출력하고 사용자 입력을 처리합니다."""
+        while True:
+            print("\n=== 파이썬 퀴즈 프로그램 ===")
+            print("1. 퀴즈 풀기")
+            print("2. 퀴즈 추가")
+            print("3. 퀴즈 목록 보기")
+            print("4. 종료")
+            
+            choice = input("원하는 메뉴 번호를 입력하세요: ")
+            
+            if choice == '1':
+                print("\n(퀴즈 풀기 기능을 곧 구현할 예정입니다!)")
+            elif choice == '2':
+                print("\n(퀴즈 추가 기능을 곧 구현할 예정입니다!)")
+            elif choice == '3':
+                print("\n--- 전체 퀴즈 목록 ---")
+                for i, q in enumerate(self.questions, 1):
+                    print(f"{i}. {q.prompt}")
+            elif choice == '4':
+                print("프로그램을 종료합니다. 안녕히 가세요!")
+                break
+            else:
+                print("잘못된 입력입니다. 다시 선택해주세요.")
+
+# 프로그램 실행
+if __name__ == "__main__":
+    game = QuizGame()
+    game.run()
