@@ -117,4 +117,4 @@ curl.exe http://localhost:8080
 컨테이너를 삭제한 뒤에도 동일한 HTML 내용이 출력되었습니다.  
 이를 통해 Docker volume에 저장된 데이터가 컨테이너 삭제 후에도 유지됨을 확인했습니다.
 
-![Docker 볼륨 영속성 확인](images/08-docker-volume-persistence.png)rmfjg
+![Docker 볼륨 영속성 확인](images/08-docker-volume-persistence.png)
