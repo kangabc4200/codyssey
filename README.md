@@ -1,205 +1,31 @@
 # codyssey
 코디세이 연동
-# 리눅스 권한 실습 기록
+## 권한 변경 실습
 
-## 1. 권한 변경 실습
-
-터미널에서 `chmod 755` 명령어를 사용하여 파일 권한을 변경하였습니다.
+`touch` 명령어로 `test.txt` 파일을 생성하고, `ls -l` 명령어로 기본 권한을 확인했습니다.
 
 ```bash
-******@******-C402-B04:~/codyssey/practice_dir$ ls -l
--rw-r--r-- 1 ******@****** ******@****** 0 Nov 6 09:07 test.txt
-******@******-C402-B04:~/codyssey/practice_dir$ chmod 755 test.txt
-******@******-C402-B04:~/codyssey/practice_dir$ ls -l
--rwxr-xr-x 1 ******@****** ******@****** 0 Nov 6 09:07 test.txt
+touch test.txt
+ls -l
 ```
-## 2. 파일 권한 변경 실습
+![기본 파일 권한 확인](images/01-permission-basic.png)
+
+### 755 권한 변경
+
+`chmod 755` 명령어로 `test.txt` 파일 권한을 변경했습니다.
 
 ```bash
-root@454e1c03b5ec:/app/practice_dir# ls -l
-total 0
--rwxr-xr-x 1 ubuntu ubuntu 0 Nov 6 00:07 test.txt
-
-root@454e1c03b5ec:/app/practice_dir# chmod 644 test.txt
-
-root@454e1c03b5ec:/app/practice_dir# ls -l test.txt
--rw-r--r-- 1 ubuntu ubuntu 0 Nov 6 00:07 test.txt
+chmod 755 test.txt
+ls -l test.txt
 ```
+![755 권한 변경 확인](images/02-permission-755.png)
 
-`test.txt` 파일 권한을 755에서 644로 변경했다.
+### 644 권한 변경
 
-## 3. 디렉토리 권한 변경 실습
-
-`practice_dir` 디렉토리 권한을 700으로 변경한 뒤, 다시 755로 변경하였다.
+`chmod 644` 명령어로 `test.txt` 파일 권한을 변경했습니다.
 
 ```bash
-root@454e1c03b5ec:/app/practice_dir# cd ..
-root@454e1c03b5ec:/app# ls -ld practice_dir
-drwxr-xr-x 2 ubuntu ubuntu ... practice_dir
-
-root@454e1c03b5ec:/app# chmod 700 practice_dir
-root@454e1c03b5ec:/app# ls -ld practice_dir
-drwx------ 2 ubuntu ubuntu ... practice_dir
-
-root@454e1c03b5ec:/app# chmod 755 practice_dir
-root@454e1c03b5ec:/app# ls -ld practice_dir
-drwxr-xr-x 2 ubuntu ubuntu ... practice_dir
+chmod 644 test.txt
+ls -l test.txt
 ```
-## 4. Docker 점검
-
-Docker 설치 상태, 이미지 목록, 컨테이너 목록을 확인하였다.
-
-```bash
-****@****:~/codyssey$ docker --version
-Docker version 29.9.2, build a82e528
-```
-
-```bash
-****@****:~/codyssey$ docker info
-Server:
- Containers: 5
-  Running: 0
-  Paused: 0
-  Stopped: 5
- Images: 8
- Server Version: 29.9.2
- Operating System: Docker Desktop
- OSType: linux
- Architecture: x86_64
-```
-
-```bash
-****@****:~/codyssey$ docker images
-IMAGE                           ID             DISK USAGE   CONTENT SIZE   EXTRA
-codyssey-my-web-server:latest   47ff2608aa15   241MB        63.9MB
-codyssey-web-1:latest           e12bf510f8bf   241MB        63.9MB
-codyssey-web-2:latest           56fa4007ba1e   241MB        63.9MB
-codyssey-web1:latest            410a1bd706eb   241MB        63.9MB
-codyssey-web2:latest            5b29b6a8d524   241MB        63.9MB
-hello-world:latest              c567b231f656   25.9kB       9.49kB
-nginx:latest                    5ab5b0b01097   243MB        66.8MB
-ubuntu:latest                   6a06111c3b0a   163MB        45.9MB
-```
-
-```bash
-****@****:~/codyssey$ docker ps -a
-CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS                        PORTS                  NAMES
-454e1c03b5ec   ubuntu:latest   "/bin/bash"              27 minutes ago   Exited (0) 48 seconds ago                            laughing_liskov
-1b55de356427   nginx:latest    "/docker-entrypoint..."  2 days ago       Exited (255) 30 minutes ago   0.0.0.0:8080->80/tcp   codyssy-lb
-1a64a816ae29   codyssey-web1   "/docker-entrypoint..."  2 days ago       Exited (255) 30 minutes ago   0.0.0.0:8081->80/tcp   codyssey-web-1
-64d40bfce932   codyssey-web2   "/docker-entrypoint..."  2 days ago       Exited (255) 30 minutes ago   0.0.0.0:8082->80/tcp   codyssey-web-2
-9a8935ce7022   hello-world     "/hello"                 2 days ago       Exited (0) 2 days ago                                focused_wing
-```
-
-## 5. Dockerfile 웹 서버 실행 결과
-
-- 이미지 이름: codyssey-nginx
-- 컨테이너 이름: codyssey-web
-- 포트 연결: localhost:8080 -> container:80
-- 실행 확인 명령어:
-
-```bash
-docker build -t codyssey-nginx .
-docker run -d --name codyssey-web -p 8080:80 codyssey-nginx
-docker ps
-curl http://localhost:8080
-```
-
-그다음 Git에 저장합니다.
-
-```bash
-git add README.md
-git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
-git push
-```
-## 6. Docker 볼륨 실습
-
-Docker 볼륨을 생성하고, 컨테이너 삭제 후에도 데이터가 유지되는지 확인했다.
-
-```bash
-docker volume create codyssey-volume
-docker volume ls
-```
-
-```text
-DRIVER    VOLUME NAME
-local     codyssey-volume
-```
-
-```bash
-docker run -it --name volume-test -v codyssey-volume:/data ubuntu bash
-echo "Docker volume test" > /data/test.txt
-cat /data/test.txt
-exit
-docker rm volume-test
-docker run -it --name volume-test-2 -v codyssey-volume:/data ubuntu bash
-cat /data/test.txt
-```
-
-```text
-Docker volume test
-```
-
-컨테이너를 삭제해도 Docker 볼륨에 저장된 데이터가 유지됨을 확인했다.
-
-## 7. Git 제출 기록
-
-```bash
-git add README.md
-git commit -m "docs: Dockerfile 웹 서버 실행 결과 기록"
-git push
-```
-
-최종 상태 확인:
-
-```bash
-git status
-```
-
-```text
-nothing to commit, working tree clean
-```
-## 8. Dockerfile 내용
-
-```Dockerfile
-FROM nginx:latest
-COPY index.html /usr/share/nginx/html/index.html
-```
-
-## 9. Docker build 실행 결과
-
-```bash
-docker build -t codyssey-nginx .
-```
-
-```text
-빌드가 정상적으로 완료되었고, codyssey-nginx 이미지가 생성되었다.
-```
-
-## 10. Docker run 및 접속 확인 결과
-
-```bash
-docker run -d --name codyssey-web -p 8080:80 codyssey-nginx
-docker ps
-curl http://localhost:8080
-```
-
-```text
-codyssey-web 컨테이너가 실행되었고,
-localhost:8080 접속 시 index.html 내용이 출력되는 것을 확인했다.
-```
-
-## 11. Git 최종 제출 상태
-
-```bash
-git status
-```
-
-```text
-nothing to commit, working tree clean
-```
-## Docker build 및 curl 접속 확인
-
-Docker 이미지를 빌드하고 `curl http://localhost:8080`로 웹 서버 응답을 확인했다.
-
-![Docker build 및 curl 접속 확인](./images/docker-build-curl.png)
+![644 권한 변경 확인](images/03-permission-644.png)
