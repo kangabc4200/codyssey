@@ -238,14 +238,17 @@ git status
 
 README의 이미지 경로도 실제 파일명과 같은지 확인했다.
 
-```markdown
-![Docker info 확인](images/09-docker-info.png)
-```
+![Docker info 확인 1](images/09-docker-info-1.png)
 
-#### 해결
+![Docker info 확인 2](images/09-docker-info-2.png)
+
+
+### 해결
+
 이미지 파일을 `images/` 폴더에 정리하고, README의 이미지 경로를 실제 파일명과 일치하도록 수정했다.
 
 수정 후 변경사항을 Git에 추가하고 커밋한 뒤 GitHub에 push했다.
+```
 
 ```bash
 git add README.md images/
@@ -256,7 +259,9 @@ git push
 #### 결과
 GitHub 저장소의 README에서 스크린샷 이미지가 정상적으로 표시되는 것을 확인했다.
 
-![Docker info 확인](images/09-docker-info.png)
+![Docker info 확인 1](images/09-docker-info-1.png)
+
+![Docker info 확인 2](images/09-docker-info-2.png)
 
 ---
 
