@@ -1018,3 +1018,4 @@ docker run -d --name bind-mount-test -p 8082:80 -v "$(pwd)/bind-test:/usr/share/
 
 즉, 바인드 마운트는 호스트의 실제 폴더와 컨테이너 내부 폴더를 연결하는 방식이다.  
 로컬
+
