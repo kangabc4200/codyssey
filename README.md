@@ -1,5 +1,22 @@
 # codyssey
 코디세이 연동
+# 개발 워크스테이션 구축
+
+## 1. 프로젝트 개요
+
+이 저장소는 개발 워크스테이션 구축 미션 결과물을 정리한 저장소입니다.  
+터미널 기본 조작, 파일 권한 설정, Git/GitHub 연동, Docker 설치 확인, Dockerfile 기반 웹 서버 실행, 포트 매핑, Docker 볼륨 영속성 검증을 수행했습니다.
+
+---
+
+## 2. 실행 환경
+
+- OS: Windows
+- Shell: PowerShell / VS Code Terminal
+- Git: `git --version` 결과 기록
+- Docker: `docker --version` 결과 기록
+- Editor: Visual Studio Code
+
 ## 권한 변경 실습
 
 `touch` 명령어로 `test.txt` 파일을 생성하고, `ls -l` 명령어로 기본 권한을 확인했습니다.
@@ -45,6 +62,36 @@ docker run hello-world
 ```
 
 ![Docker hello-world 실행 확인](images/05-docker-hello-world.png)
+
+### Docker 정보 확인
+
+Docker 실행 환경이 정상적으로 구성되어 있는지 확인하기 위해 `docker info` 명령어를 실행했습니다.
+
+```bash
+docker info
+```
+
+실행 결과 Docker Client와 Server가 모두 정상적으로 동작 중임을 확인했습니다.
+
+```text
+Client Version: 29.9.2
+Context: desktop-linux
+Server Version: 29.9.2
+Containers: 8
+Running: 2
+Paused: 0
+Stopped: 6
+Images: 10
+Storage Driver: overlayfs
+Operating System: Docker Desktop
+OSType: linux
+Architecture: x86_64
+CPUs: 24
+Total Memory: 15.25GiB
+```
+
+![Docker info 확인 1](images/09-docker-info-1.png)
+![Docker info 확인 2](images/09-docker-info-2.png)
 
 ## Dockerfile 웹 서버 실행
 
