@@ -857,3 +857,164 @@ COPY ./app /usr/share/nginx/html
 정리하면 다음과 같다.
 
 | 경로 | 종류
+
+
+---
+
+# 최종 평가 보완 증빙
+
+## 평가 항목 #2 보완: chmod 실행 후 ls -l 출력 증빙
+
+파일 권한 변경 후 실제 권한이 변경되었는지 확인하기 위해 `chmod` 명령어 실행 후 `ls -l` 명령어를 사용했다.
+
+실행한 명령어는 다음과 같다.
+
+```bash
+touch chmod-proof.txt
+chmod 644 chmod-proof.txt
+ls -l chmod-proof.txt
+chmod 755 chmod-proof.txt
+ls -l chmod-proof.txt
+```
+
+`chmod 644` 실행 후에는 다음과 같은 권한 형태가 확인된다.
+
+```text
+-rw-r--r--
+```
+
+이는 소유자는 읽기/쓰기 가능, 그룹과 기타 사용자는 읽기만 가능하다는 의미이다.
+
+`chmod 755` 실행 후에는 다음과 같은 권한 형태가 확인된다.
+
+```text
+-rwxr-xr-x
+```
+
+이는 소유자는 읽기/쓰기/실행 가능, 그룹과 기타 사용자는 읽기/실행 가능하다는 의미이다.
+
+따라서 `chmod` 명령어 실행 전후로 `ls -l` 출력을 확인하여 파일 권한이 실제로 변경되었음을 검증했다.
+
+![chmod 실행 후 ls -l 출력](images/18-chmod-ls-output.png)
+
+---
+
+## 평가 항목 #5 보완: docker images 및 docker ps -a 출력 증빙
+
+Docker 이미지와 컨테이너 상태를 확인하기 위해 다음 명령어를 실행했다.
+
+```bash
+docker images
+docker ps -a
+```
+
+`docker images` 명령어는 현재 로컬 환경에 저장된 Docker 이미지 목록을 출력한다.
+
+확인 가능한 주요 항목은 다음과 같다.
+
+| 항목 | 의미 |
+|---|---|
+| REPOSITORY | 이미지 이름 |
+| TAG | 이미지 태그 |
+| IMAGE ID | 이미지 고유 ID |
+| CREATED | 이미지 생성 시점 |
+| SIZE | 이미지 크기 |
+
+`docker ps -a` 명령어는 실행 중인 컨테이너뿐만 아니라 중지된 컨테이너까지 전체 컨테이너 목록을 출력한다.
+
+확인 가능한 주요 항목은 다음과 같다.
+
+| 항목 | 의미 |
+|---|---|
+| CONTAINER ID | 컨테이너 고유 ID |
+| IMAGE | 컨테이너가 사용하는 이미지 |
+| COMMAND | 컨테이너 실행 명령 |
+| STATUS | 컨테이너 실행 상태 |
+| PORTS | 포트 매핑 정보 |
+| NAMES | 컨테이너 이름 |
+
+이를 통해 `codyssey-web` 이미지와 해당 이미지를 기반으로 실행한 컨테이너의 존재 여부를 확인했다.
+
+![docker images 및 docker ps -a 출력](images/19-docker-images-ps-a.png)
+
+---
+
+## 평가 항목 #7 보완: 호스트 포트 접속 및 서비스 응답 증빙
+
+Docker 컨테이너 내부의 nginx 웹 서버는 컨테이너 내부 `80` 포트에서 실행된다.  
+호스트 PC에서 접속할 수 있도록 다음과 같이 포트 매핑을 설정했다.
+
+```bash
+docker run -d --name codyssey-web -p 8080:80 codyssey-web
+```
+
+여기서 `-p 8080:80`의 의미는 다음과 같다.
+
+| 구분 | 포트 | 설명 |
+|---|---:|---|
+| 호스트 포트 | 8080 | 내 PC에서 접속하는 포트 |
+| 컨테이너 포트 | 80 | 컨테이너 내부 nginx가 사용하는 포트 |
+
+컨테이너 실행 후 다음 명령어로 실제 웹 서버 응답을 확인했다.
+
+```bash
+curl -i http://localhost:8080
+```
+
+정상 응답이 오면 다음과 같이 HTTP 응답 상태 또는 HTML 내용이 출력된다.
+
+```text
+HTTP/1.1 200 OK
+```
+
+또는 `app/index.html`에 작성한 HTML 내용이 출력된다.
+
+즉, 호스트의 `localhost:8080`으로 들어온 요청이 Docker 포트 포워딩을 통해 컨테이너 내부 nginx의 `80` 포트로 정상 전달되었음을 확인했다.
+
+![localhost 8080 curl 응답](images/20-curl-localhost-8080.png)
+
+브라우저에서도 다음 주소로 접속하여 웹 페이지 응답을 확인할 수 있다.
+
+```text
+http://localhost:8080
+```
+
+![localhost 8080 브라우저 접속](images/21-browser-localhost-8080.png)
+
+---
+
+## 평가 항목 #17 보완: Docker 볼륨과 바인드 마운트 비교
+
+Docker에서 데이터를 컨테이너 외부에 유지하는 대표적인 방법에는 `volume`과 `bind mount`가 있다.
+
+이번 실습에서는 Docker 볼륨을 사용하여 컨테이너가 삭제되어도 데이터가 유지되는 것을 확인했다.  
+추가로 바인드 마운트와 볼륨의 차이를 비교하면 다음과 같다.
+
+| 구분 | Docker Volume | Bind Mount |
+|---|---|---|
+| 관리 주체 | Docker가 관리 | 사용자가 지정한 호스트 경로 사용 |
+| 저장 위치 | Docker 내부 관리 영역 | 호스트 PC의 특정 폴더 |
+| 경로 지정 | 볼륨 이름 사용 | 호스트의 실제 경로 사용 |
+| 이식성 | 상대적으로 높음 | 호스트 경로에 의존 |
+| 사용 예 | DB 데이터 저장, 컨테이너 데이터 영속성 | 로컬 개발 코드 즉시 반영 |
+| 명령어 예시 | `-v my-volume:/data` | `-v $(pwd)/app:/usr/share/nginx/html` |
+
+Docker 볼륨 예시는 다음과 같다.
+
+```bash
+docker volume create codyssey-volume
+docker run -d --name volume-test -v codyssey-volume:/data nginx:latest
+```
+
+위 방식은 Docker가 `codyssey-volume`이라는 저장 공간을 직접 관리한다.
+
+반면 바인드 마운트 예시는 다음과 같다.
+
+```bash
+docker run -d --name bind-mount-test -p 8082:80 -v "$(pwd)/bind-test:/usr/share/nginx/html:ro" nginx:latest
+```
+
+위 방식은 현재 호스트 PC의 `bind-test` 폴더를 컨테이너 내부의 `/usr/share/nginx/html` 경로에 직접 연결한다.
+
+즉, 바인드 마운트는 호스트의 실제 폴더와 컨테이너 내부 폴더를 연결하는 방식이다.  
+로컬
