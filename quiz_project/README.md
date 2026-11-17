@@ -60,4 +60,9 @@ python quiz_project/main.py
 ### 2. 원격 저장소 및 클론 테스트
 - **원격 저장소 연결 확인**: ![Remote](images2/git_remote.png)
 - **Git Clone 테스트 성공**: ![Clone](images2/git_clone.png)
+ㄴ
 
+##파이썬 퀴즈 실행과정
+
+- **파이썬 실행 기본 화면**:  
+![시작화면](images2/start_screen.png)
