@@ -19,8 +19,27 @@ class QuizGame:
         self.load_data()
 
     def load_data(self):
-        """파일에서 데이터를 불러오거나, 형식이 맞지 않으면 기본 문제를 생성합니다."""
+        """파일에서 데이터를 불러오거나, 형식 지 맞지 않으면 기본 문제를 생성합니다."""
         try:
+            # 파일이 없거나 내용이 비어있는 경우 기본 문제 세팅
+            if not os.path.exists(self.file_path) or os.path.getsize(self.file_path) == 0:
+                self.set_default_questions()
+                return
+
+            with open(self.file_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # 데이터가 딕셔너리 형태일 때만 읽기 (AttributeError 방지)
+                if isinstance(data, dict):
+                    self.high_score = data.get('high_score', 0)
+                    self.questions = [
+                        Question(q['prompt'], q['options'], q['answer'])
+                        for q in data.get('questions', [])
+                    ]
+                    if self.questions: 
+                        return  # 성공적으로 읽었으면 종료
+            
+            # 읽어왔는데 데이터가 비어있다면 기본 문제 세팅
+            self.set_default_questions()
             if os.path.exists(self.file_path):
                 with open(self.file_path, 'r', encoding='utf-8') as f:
                     data = json.load(f)
