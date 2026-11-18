@@ -33,9 +33,21 @@ class QuizGame:
                         ]
                         if self.questions: return # 성공적으로 읽었으면 종료
             
-            # 파일이 없거나 형식이 다르면 기본 문제 로드
+           # 파일이 존재하지 않는 경우
             self.set_default_questions()
-        except Exception:
+
+        # [보완] 세부 예외별 개별 처리
+        except FileNotFoundError:
+            print("⚠️ 상태 파일을 찾을 수 없어 기본 문제를 생성합니다.")
+            self.set_default_questions()
+        except PermissionError:
+            print("❌ 파일 접근 권한이 없습니다. 읽기/쓰기 권한을 확인해주세요.")
+            self.set_default_questions()
+        except json.JSONDecodeError:
+            print("⚠️ 파일의 JSON 형식에 오류가 있어 기본 문제로 초기화합니다.")
+            self.set_default_questions()
+        except Exception as e:
+            print(f"⚠️ 알 수 없는 오류 발생: {e}")
             self.set_default_questions()
 
     def set_default_questions(self):
